@@ -24,19 +24,28 @@ struct SideMenu: View {
 }
 
 struct ContentView: View {
+  @State var menuOpened = false
+  
   var body: some View {
-    VStack {
-      Image(systemName: "globe")
-        .imageScale(.large)
-        .foregroundColor(.accentColor)
-      Text("Hello, world!")
+    ZStack {
+      Button {
+        // Open menu
+      } label: {
+        Text("Open menu")
+          .bold()
+          .foregroundColor(Color.white)
+          .frame(width: 200, height: 50, alignment: .center)
+          .background(Color(.systemBlue))
+      }
+
     }
-    .padding()
+    .edgesIgnoringSafeArea(.all)
   }
 }
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
+      .preferredColorScheme(.dark)
   }
 }
