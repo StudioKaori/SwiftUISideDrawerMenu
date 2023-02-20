@@ -7,10 +7,31 @@
 
 import SwiftUI
 
+struct MenuItem: Identifiable {
+  let id = UUID()
+  let text: String
+}
+
 struct MenuContent: View {
+  let items: [MenuItem] = [
+    MenuItem(text: "Home"),
+    MenuItem(text: "Settings"),
+    MenuItem(text: "Profile"),
+    MenuItem(text: "Activity"),
+    MenuItem(text: "Flights"),
+    MenuItem(text: "Share")
+  ]
+  
   var body: some View {
     ZStack {
+      Color(UIColor(red: 33/255.0, green: 33/255.0, blue: 33/255.0, alpha: 1))
       
+      VStack(alignment: .leading, spacing: 0) {
+        ForEach(items) { item in
+          
+        }
+        Spacer()
+      }
     }
   }
 }
@@ -26,7 +47,7 @@ struct SideMenu: View {
       GeometryReader {_ in
         EmptyView()
       }
-      .background(Color.red.opacity(0.5))
+      .background(Color.red.opacity(0.15))
       .opacity(self.menuOpened ? 1 : 0)
       .animation(Animation.easeIn.delay(0.25))
       .onTapGesture {
@@ -34,6 +55,9 @@ struct SideMenu: View {
       }
       
       // Menu content
+      HStack {
+        MenuContent()
+      }
       
     }
   }
