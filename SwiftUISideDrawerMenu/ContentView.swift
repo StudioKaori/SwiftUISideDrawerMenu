@@ -10,6 +10,9 @@ import SwiftUI
 struct MenuItem: Identifiable {
   let id = UUID()
   let text: String
+  let handler: () -> Void = {
+    print("Tapped item")
+  }
 }
 
 struct MenuContent: View {
@@ -28,10 +31,22 @@ struct MenuContent: View {
       
       VStack(alignment: .leading, spacing: 0) {
         ForEach(items) { item in
+          HStack {
+            Text(item.text)
+              .bold()
+              .font(.system(size: 22))
+              .multilineTextAlignment(.leading)
+            
+            Spacer()
+          }
+          .padding()
+          
+          Divider()
           
         }
         Spacer()
       }
+      .padding(.top, 25)
     }
   }
 }
@@ -88,7 +103,7 @@ struct ContentView: View {
         }
       }
       
-      SideMenu(width: 370,
+      SideMenu(width: UIScreen.main.bounds.width/1.6,
                menuOpened: menuOpened,
                toggleMenu: toggleMenu)
     }
