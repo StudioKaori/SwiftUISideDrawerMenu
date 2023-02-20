@@ -10,6 +10,7 @@ import SwiftUI
 struct MenuItem: Identifiable {
   let id = UUID()
   let text: String
+  let imageName: String
   let handler: () -> Void = {
     print("Tapped item")
   }
@@ -17,12 +18,12 @@ struct MenuItem: Identifiable {
 
 struct MenuContent: View {
   let items: [MenuItem] = [
-    MenuItem(text: "Home"),
-    MenuItem(text: "Settings"),
-    MenuItem(text: "Profile"),
-    MenuItem(text: "Activity"),
-    MenuItem(text: "Flights"),
-    MenuItem(text: "Share")
+    MenuItem(text: "Home", imageName: "house"),
+    MenuItem(text: "Settings", imageName: "person.circle"),
+    MenuItem(text: "Profile", imageName: "bell"),
+    MenuItem(text: "Activity", imageName: "airplane"),
+    MenuItem(text: "Flights", imageName: "gear"),
+    MenuItem(text: "Share", imageName: "square.and.arrow.up")
   ]
   
   var body: some View {
@@ -32,7 +33,14 @@ struct MenuContent: View {
       VStack(alignment: .leading, spacing: 0) {
         ForEach(items) { item in
           HStack {
+            Image(systemName: item.imageName)
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .foregroundColor(Color.white)
+              .frame(width: 32, height: 32, alignment: .center)
+            
             Text(item.text)
+              .foregroundColor(Color.white)
               .bold()
               .font(.system(size: 22))
               .multilineTextAlignment(.leading)
@@ -118,6 +126,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
-      .preferredColorScheme(.dark)
+      //.preferredColorScheme(.dark)
   }
 }
