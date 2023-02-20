@@ -9,52 +9,47 @@ import SwiftUI
 
 struct MenuItem: Identifiable {
   let id = UUID()
-  let text: String
-  let imageName: String
+  let label: String
+  let iconName: String
   let handler: () -> Void = {
     print("Tapped item")
   }
 }
 
 struct MenuContent: View {
-  let items: [MenuItem] = [
-    MenuItem(text: "Home", imageName: "house"),
-    MenuItem(text: "Settings", imageName: "person.circle"),
-    MenuItem(text: "Profile", imageName: "bell"),
-    MenuItem(text: "Activity", imageName: "airplane"),
-    MenuItem(text: "Flights", imageName: "gear"),
-    MenuItem(text: "Share", imageName: "square.and.arrow.up")
-  ]
+  let items: [MenuItem]
+  let fontColor: Color
+  let fontSize: Font
+  let backgroundColor: Color
   
   var body: some View {
     ZStack {
-      Color(UIColor(red: 33/255.0, green: 33/255.0, blue: 33/255.0, alpha: 1))
+      backgroundColor
       
       VStack(alignment: .leading, spacing: 0) {
         ForEach(items) { item in
           HStack {
-            Image(systemName: item.imageName)
-              .resizable()
-              .aspectRatio(contentMode: .fit)
+            Image(systemName: item.iconName)
+              .font(fontSize)
               .foregroundColor(Color.white)
-              .frame(width: 32, height: 32, alignment: .center)
+              
             
-            Text(item.text)
-              .foregroundColor(Color.white)
-              .bold()
-              .font(.system(size: 22))
+            Text(item.label)
+              .foregroundColor(fontColor)
+              .font(fontSize)
               .multilineTextAlignment(.leading)
             
             Spacer()
           }
+          .onTapGesture {
+            item.handler()
+          }
           .padding()
-          
-          Divider()
           
         }
         Spacer()
       }
-      .padding(.top, 25)
+      .padding(.top, 60)
     }
   }
 }
@@ -62,7 +57,12 @@ struct MenuContent: View {
 struct SideMenu: View {
   let width: CGFloat
   let menuOpened: Bool
-  let toggleMenu: () -> Void
+  let toggleMenuHandler: () -> Void
+  let menuItems: [MenuItem]
+  let fontColor: Color
+  let fontSize: Font
+  let backgroundColor: Color
+  let dimmedBgColor: Color
   
   var body: some View {
     ZStack {
@@ -70,21 +70,24 @@ struct SideMenu: View {
       GeometryReader {_ in
         EmptyView()
       }
-      .background(Color.red.opacity(0.15))
+      .background(dimmedBgColor)
       .opacity(self.menuOpened ? 1 : 0)
       //.animation(Animation.easeIn.delay(0.25))
       .onTapGesture {
         withAnimation(Animation.easeIn.delay(0.6)) {
-          self.toggleMenu()
+          self.toggleMenuHandler()
         }
       }
       
       // Menu content
       HStack {
-        MenuContent()
+        MenuContent(items: menuItems,
+                    fontColor: fontColor,
+                    fontSize: fontSize,
+                    backgroundColor: backgroundColor)
           .frame(width: width)
           .offset(x: menuOpened ? 0 : -width)
-          .animation(Animation.easeIn(duration: 1.0), value: menuOpened)
+          .animation(Animation.easeInOut(duration: 0.25), value: menuOpened)
         
         Spacer()
       }
@@ -95,6 +98,23 @@ struct SideMenu: View {
 
 struct ContentView: View {
   @State var menuOpened = false
+  
+  let menuItems: [MenuItem] = [
+    MenuItem(label: "Home", iconName: "house"),
+    MenuItem(label: "Settings", iconName: "person.circle"),
+    MenuItem(label: "Profile", iconName: "bell"),
+    MenuItem(label: "Activity", iconName: "airplane"),
+    MenuItem(label: "Flights", iconName: "gear"),
+    MenuItem(label: "Share", iconName: "square.and.arrow.up")
+  ]
+  let menuBgColor = Color(UIColor(red: 33/255.0, green: 33/255.0, blue: 33/255.0, alpha: 1))
+  let fontColor = Color.white
+  let fontSize = Font.body
+  let dimmedBgColor = Color.red.opacity(0.15)
+  
+  func toggleMenu() {
+    menuOpened.toggle()
+  }
   
   var body: some View {
     ZStack {
@@ -113,19 +133,20 @@ struct ContentView: View {
       
       SideMenu(width: UIScreen.main.bounds.width/1.6,
                menuOpened: menuOpened,
-               toggleMenu: toggleMenu)
+               toggleMenuHandler: toggleMenu,
+               menuItems: menuItems,
+               fontColor: fontColor,
+               fontSize: fontSize,
+               backgroundColor: menuBgColor,
+               dimmedBgColor: dimmedBgColor)
     }
     .edgesIgnoringSafeArea(.all)
-  }
-  
-  func toggleMenu() {
-    menuOpened.toggle()
   }
 }
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
-      //.preferredColorScheme(.dark)
+      .preferredColorScheme(.dark)
   }
 }
