@@ -21,6 +21,7 @@ struct MenuContent: View {
   let fontColor: Color
   let fontSize: Font
   let backgroundColor: Color
+  let topPadding: CGFloat
   
   var body: some View {
     ZStack {
@@ -49,7 +50,7 @@ struct MenuContent: View {
         }
         Spacer()
       }
-      .padding(.top, 60)
+      .padding(.top, topPadding)
     }
   }
 }
@@ -63,6 +64,7 @@ struct SideMenu: View {
   let fontSize: Font
   let backgroundColor: Color
   let dimmedBgColor: Color
+  let menuTopPadding: CGFloat
   
   var body: some View {
     ZStack {
@@ -84,7 +86,8 @@ struct SideMenu: View {
         MenuContent(items: menuItems,
                     fontColor: fontColor,
                     fontSize: fontSize,
-                    backgroundColor: backgroundColor)
+                    backgroundColor: backgroundColor,
+                    topPadding: menuTopPadding)
           .frame(width: width)
           .offset(x: menuOpened ? 0 : -width)
           .animation(Animation.easeInOut(duration: 0.25), value: menuOpened)
@@ -107,10 +110,12 @@ struct ContentView: View {
     MenuItem(label: "Flights", iconName: "gear"),
     MenuItem(label: "Share", iconName: "square.and.arrow.up")
   ]
+  let menuWidth = UIScreen.main.bounds.width/1.6
   let menuBgColor = Color(UIColor(red: 33/255.0, green: 33/255.0, blue: 33/255.0, alpha: 1))
   let fontColor = Color.white
   let fontSize = Font.body
   let dimmedBgColor = Color.red.opacity(0.15)
+  let menuTopPadding: CGFloat = 60
   
   func toggleMenu() {
     menuOpened.toggle()
@@ -131,14 +136,15 @@ struct ContentView: View {
         }
       }
       
-      SideMenu(width: UIScreen.main.bounds.width/1.6,
+      SideMenu(width: menuWidth,
                menuOpened: menuOpened,
                toggleMenuHandler: toggleMenu,
                menuItems: menuItems,
                fontColor: fontColor,
                fontSize: fontSize,
                backgroundColor: menuBgColor,
-               dimmedBgColor: dimmedBgColor)
+               dimmedBgColor: dimmedBgColor,
+               menuTopPadding: menuTopPadding)
     }
     .edgesIgnoringSafeArea(.all)
   }
