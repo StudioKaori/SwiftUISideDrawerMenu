@@ -115,38 +115,41 @@ struct ContentView: View {
   let fontColor = Color.white
   let fontSize = Font.body
   let dimmedBgColor = Color.red.opacity(0.15)
-  let menuTopPadding: CGFloat = 60
+  //let menuTopPadding: CGFloat = 60
   
   func toggleMenu() {
     menuOpened.toggle()
   }
   
   var body: some View {
-    ZStack {
-      if !menuOpened {
-        Button {
-          // Open menu
-          self.menuOpened.toggle()
-        } label: {
-          Text("Open menu")
-            .bold()
-            .foregroundColor(Color.white)
-            .frame(width: 200, height: 50, alignment: .center)
-            .background(Color(.systemBlue))
+    GeometryReader { geo in
+      ZStack {
+        if !menuOpened {
+          Button {
+            // Open menu
+            self.menuOpened.toggle()
+          } label: {
+            Text("Open menu")
+              .bold()
+              .foregroundColor(Color.white)
+              .frame(width: 200, height: 50, alignment: .center)
+              .background(Color(.systemBlue))
+          }
         }
+        
+        SideMenu(width: menuWidth,
+                 menuOpened: menuOpened,
+                 toggleMenuHandler: toggleMenu,
+                 menuItems: menuItems,
+                 fontColor: fontColor,
+                 fontSize: fontSize,
+                 backgroundColor: menuBgColor,
+                 dimmedBgColor: dimmedBgColor,
+                 menuTopPadding: geo.safeAreaInsets.top)
       }
-      
-      SideMenu(width: menuWidth,
-               menuOpened: menuOpened,
-               toggleMenuHandler: toggleMenu,
-               menuItems: menuItems,
-               fontColor: fontColor,
-               fontSize: fontSize,
-               backgroundColor: menuBgColor,
-               dimmedBgColor: dimmedBgColor,
-               menuTopPadding: menuTopPadding)
+      .edgesIgnoringSafeArea(.all)
     }
-    .edgesIgnoringSafeArea(.all)
+    
   }
 }
 
