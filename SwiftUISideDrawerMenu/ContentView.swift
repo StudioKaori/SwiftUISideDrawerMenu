@@ -16,8 +16,24 @@ struct MenuContent: View {
 }
 
 struct SideMenu: View {
+  let width: CGFloat
+  let menuOpened: Bool
+  let toggleMenu: () -> Void
+  
   var body: some View {
     ZStack {
+      // Dimmed background view
+      GeometryReader {_ in
+        EmptyView()
+      }
+      .background(Color.red.opacity(0.5))
+      .opacity(self.menuOpened ? 1 : 0)
+      .animation(Animation.easeIn.delay(0.25))
+      .onTapGesture {
+        self.toggleMenu()
+      }
+      
+      // Menu content
       
     }
   }
@@ -28,18 +44,28 @@ struct ContentView: View {
   
   var body: some View {
     ZStack {
-      Button {
-        // Open menu
-      } label: {
-        Text("Open menu")
-          .bold()
-          .foregroundColor(Color.white)
-          .frame(width: 200, height: 50, alignment: .center)
-          .background(Color(.systemBlue))
+      if !menuOpened {
+        Button {
+          // Open menu
+          self.menuOpened.toggle()
+        } label: {
+          Text("Open menu")
+            .bold()
+            .foregroundColor(Color.white)
+            .frame(width: 200, height: 50, alignment: .center)
+            .background(Color(.systemBlue))
+        }
       }
-
+      
+      SideMenu(width: 370,
+               menuOpened: menuOpened,
+               toggleMenu: toggleMenu)
     }
     .edgesIgnoringSafeArea(.all)
+  }
+  
+  func toggleMenu() {
+    menuOpened.toggle()
   }
 }
 
