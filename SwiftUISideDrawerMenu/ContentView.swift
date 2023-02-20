@@ -49,14 +49,21 @@ struct SideMenu: View {
       }
       .background(Color.red.opacity(0.15))
       .opacity(self.menuOpened ? 1 : 0)
-      .animation(Animation.easeIn.delay(0.25))
+      //.animation(Animation.easeIn.delay(0.25))
       .onTapGesture {
-        self.toggleMenu()
+        withAnimation(Animation.easeIn.delay(0.6)) {
+          self.toggleMenu()
+        }
       }
       
       // Menu content
       HStack {
         MenuContent()
+          .frame(width: width)
+          .offset(x: menuOpened ? 0 : -width)
+          .animation(Animation.easeIn(duration: 1.0), value: menuOpened)
+        
+        Spacer()
       }
       
     }
